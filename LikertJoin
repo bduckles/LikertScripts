@@ -3,6 +3,10 @@
 #Two datasets with very simple likert scales so I can play with joining together
 #the data after setting the factor levels. 
 
+library(tidyverse) 
+library(tidyr)
+library(likert)
+
 # I was trying to work out how best to write code for two pre/post workshop datasets
 # that would need to be joined and analyzed. 
 
