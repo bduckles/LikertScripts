@@ -1,7 +1,6 @@
 #This is to figure out how to create stacked barcharts for model likert data
 
 # Setup -------------------------------------------------------------------
-setwd("/Users/Anaya/git/LikertBarCharts")
 library(tidyverse)
 library(likert)
 library(ggplot2)
