@@ -1,0 +1,52 @@
+#This is to figure out how to create stacked barcharts for model likert data
+
+# Setup -------------------------------------------------------------------
+setwd("/Users/Anaya/git/LikertBarCharts")
+library(tidyverse)
+library(likert)
+library(ggplot2)
+library(forcats)
+
+# Data --------------------------------------------------------------------
+
+PreQ <- c("Strongly Agree", "Strongly Disagree", "Strongly Disagree", "Disagree", "Agree", "Disagree", "Agree", "Disagree", "Strongly Disagree", "Disagree", "Agree", "Agree", "Strongly Disagree", "Agree", "Disagree", "Agree", "Agree", "Disagree", "Disagree","Agree")
+PreQ <- factor(PreQ)
+PostQ <- c("Strongly Agree", "Agree", "Agree", "Disagree", "Strongly Agree", "Strongly Agree", "Strongly Agree", "Disagree", "Strongly Agree", "Disagree", "Agree", "Agree", "Disagree", "Strongly Agree", "Agree", "Agree", "Strongly Disagree", "Agree", "Strongly Agree", "Agree")
+PostQ <- factor(PostQ)
+Gender <- c("Male", "Male", "Female", "Female", "Male", "Female", "Female", "Female", "Male", "Female","Female", "Male", "Male", "Female", "Female", "Male", "Male", "Male", 
+"Female", "Male")
+Gender <- factor(Gender)
+df <- data.frame(Gender, PreQ, PostQ)
+
+dfPrePost <- df %>% select(PreQ, PostQ) 
+                           
+agreelevel <- c("Strongly Disagree", "Disagree", "Agree","Strongly Agree")
+
+factfunc <- function(mydata, factlevel){
+  factor(mydata, 
+         levels=factlevel, 
+         ordered=TRUE, 
+         exclude = NA)
+  fct_unify(mydata,
+            levels=factlevel)
+}
+
+dfPrePost <- factfunc(dfPrePost, agreelevel) %>% as.data.frame()
+
+names(dfPrePost) <- c(
+  PreQ="1 Pre Workshop Questions",
+  PostQ="2 Post Workshop Questions")
+
+#Make it pretty with better colors! 
+BlueFour <- c('#eff3ff', '#bdd7e7', '#6baed6', '#2171b5')
+
+
+# Plot --------------------------------------------------------------------
+#Plot 
+Title <- "Likert Data Title"
+d <- likert(items = dfPrePost, grouping=df$Gender)
+plot(d, 
+     colors = BlueFour) + ggtitle(Title)
+
+
+
