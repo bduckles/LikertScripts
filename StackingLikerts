@@ -20,7 +20,7 @@ postdf <- data.frame(PostQ1, PostQ2, PostQ3)
 ## Agreelevel. 
 agreelevel <- c("Strongly Disagree", "Disagree", "Agree","Strongly Agree")
 
-d <- postdf %>% 
+d <- predf %>% 
   gather(key = "Question", value = "PreVar")
 d$PreVar <- 
   factor(d$PreVar, level = agreelevel, 
