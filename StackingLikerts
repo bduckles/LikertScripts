@@ -20,16 +20,15 @@ postdf <- data.frame(PostQ1, PostQ2, PostQ3)
 ## Agreelevel. 
 agreelevel <- c("Strongly Disagree", "Disagree", "Agree","Strongly Agree")
 
-d <- predf %>% 
-  gather(key = "Question", value = "PreVar")
-d$PreVar <- 
-  factor(d$PreVar, level = agreelevel, 
-         ordered = TRUE, 
-         exclude = NA)  
-d <- d %>%  
-  select(-Question)
+##Function to stack variables 
+bmd.datastack <- function(olddf, factlevel, valuecol = "Prevar", key = "Question") {
+  quo_valuecol <- enquo(valuecol)
+  olddf <- olddf %>% 
+    gather(key = "Question", value = !!quo_valuecol ) %>%
+    mutate("factorcol" = factor(!!quo_valuecol)) %>% 
+    select(-Question)
+  return(olddf)
+}
 
-
-
-
+postdf_stack <- bmd.datastack(postdf, agreelevel, Prevar)
 
