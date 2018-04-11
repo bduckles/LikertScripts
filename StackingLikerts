@@ -1,0 +1,35 @@
+#How to stack likerts into one column for analysis 
+
+##Data 
+PreQ1 <- c("Strongly Agree", "Disagree", "Strongly Disagree", "Disagree", "Agree", "Disagree", "Agree", "Disagree", "Strongly Disagree", "Disagree", "Agree", "Agree", "Strongly Disagree", "Agree", "Disagree", "Agree", "Agree", "Disagree", "Disagree","Agree")
+
+PreQ2 <- c("Agree", "Strongly Disagree", "Strongly Disagree", "Disagree", "Agree", "Disagree", "Agree", "Agree", "Disagree", "Disagree", "Agree", "Agree", "Strongly Disagree", "Disagree", "Disagree", "Disagree", "Agree", "Agree", "Strongly Agree", "Agree")
+
+PreQ3 <- c("Agree", "Strongly Disagree", "Strongly Disagree", "Disagree", "Agree", "Disagree", "Agree", "Agree", "Disagree", "Disagree", "Agree", "Agree", "Strongly Disagree", "Disagree", "Disagree", "Disagree", "Agree", "Agree", "Strongly Agree", "Agree")
+
+predf <- data.frame(PreQ1, PreQ2, PreQ3)
+
+PostQ1 <- c("Strongly Agree", "Agree", "Agree", "Disagree", "Strongly Agree", "Strongly Agree", "Strongly Agree", "Disagree", "Strongly Agree", "Disagree", "Agree", "Agree", "Disagree", "Strongly Agree", "Agree", "Agree", "Strongly Disagree", "Disagree", "Disagree","Agree")
+
+PostQ2 <- c("Strongly Disagree", "Agree", "Agree", "Disagree", "Strongly Agree", "Strongly Agree", "Strongly Disagree", "Disagree", "Strongly Agree", "Disagree", "Agree", "Strongly Agree", "Disagree", "Strongly Agree", "Agree", "Agree", "Strongly Disagree", "Agree", "Strongly Agree", "Agree")
+
+PostQ3 <- c("Agree", "Agree", "Agree", "Disagree", "Strongly Agree", "Strongly Agree", "Agree", "Disagree", "Strongly Agree", "Disagree", "Agree", "Agree", "Disagree", "Agree", "Agree", "Agree", "Strongly Disagree", "Agree", "Strongly Agree", "Agree")
+
+postdf <- data.frame(PostQ1, PostQ2, PostQ3)
+
+## Agreelevel. 
+agreelevel <- c("Strongly Disagree", "Disagree", "Agree","Strongly Agree")
+
+d <- postdf %>% 
+  gather(key = "Question", value = "PreVar")
+d$PreVar <- 
+  factor(d$PreVar, level = agreelevel, 
+         ordered = TRUE, 
+         exclude = NA)  
+d <- d %>%  
+  select(-Question)
+
+
+
+
+
