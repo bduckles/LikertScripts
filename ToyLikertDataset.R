@@ -1,8 +1,10 @@
-
 #Toy Likert Dataset
 
 library(tidyverse)
 library(likert)
+
+# Data --------------------------------------------------------------------
+
 
 #Two datasets with very simple likert scales so I can play with joining together
 #the data after setting the factor levels. 
@@ -19,51 +21,54 @@ BQ3 <- c("Three", "One", "Two", "One", "Three")
 BQ4 <- c("Two", "Three", "Three", "Three", "Two")
 Bdf <- data.frame(BQ1, BQ2, BQ3, BQ4)
 
+
+# levelset ----------------------------------------------------------------
 #set the factor levels
 levelset <- c("One", "Two", "Three")
 
-#Create a function that sets the factor level each variable in the dataset
-# Then unifies the factors so that they're all the same number of factors. 
+#Adf <- fct_unify(Adf, levels=levelset)
+
+# Create a function that sets the factor level each variable in the dataset
+# Then unifies the factors so that they're all the same number of factors.
 factfunc <- function(mydata, factlevel){
   factor(mydata, 
          levels=factlevel, 
          ordered = TRUE)
   fct_unify(mydata, 
-            levels=factlevel) 
+            levels=factlevel)
 }
 
 #Run this function over each dataset
-Adf <-factfunc(Adf, levelset) %>% as.data.frame()
-Bdf <-factfunc(Bdf, levelset) %>% as.data.frame()
+Adf <- factfunc(Adf, levelset) %>% as.data.frame()
+Bdf <- factfunc(Bdf, levelset) %>% as.data.frame()
 
-#Add in an ID column and a Group Column for the join. 
-Adf <- mutate(Adf, 
-              A_ID = 1:(nrow(Adf)),
-              Group = rep("A", nrow(Adf))
-)
 
-Bdf <- mutate(Bdf, 
-              B_ID = 1:(nrow(Adf)), 
-              Group = rep("B", nrow(Adf))
-)
+# nameID Fcn --------------------------------------------------------------
 
-##Do same things with a function 
-VarsAdd <- function(dat, Grp){
-  mutate(data, 
-         ID = 1:nrow(dat)) 
-  Group = rep("Grp", nrow(dat))
+# nameID function adds in a column with an ID number and a group name that is 
+# called at the start of the function. 
+
+nameID <- function(mydata, gname = "gname"){
+  quo_gname <- enquo(gname)
+  mutate(mydata, 
+         ID = 1:(nrow(mydata)), 
+         Group = rep(!!quo_gname, nrow(mydata))) 
 }
 
-VarsAdd(Adf, A)
+Adf <- nameID(Adf, gname = "A") %>% as.data.frame()
+Bdf <- nameID(Bdf, gname = "B") %>% as.data.frame()
+
+
+# join --------------------------------------------------------------------
 
 #Syncrhonize the column names for the join. 
 colnames(Adf) <- c("Q1", "Q2", "Q3", "Q4", "ID", "Grp")
 colnames(Bdf) <- c("Q1", "Q2", "Q3", "Q4", "ID", "Grp")
 
-#Do a full join of both datasets
+# Full join of both datasets
 Joindf <- full_join(Adf, Bdf)
 
-#create a new level for my new joined dataset to distinguish between groups A and B.  
+#create a new level for new joined dataset to distinguish between groups A and B.  
 GrpLevel <- c("B", "A")
 Joindf$Grp <- factor(Joindf$Grp, levels=GrpLevel, ordered = TRUE)
 
@@ -73,8 +78,4 @@ likJoin <- select(Joindf,
 
 JoinQs <- likert(likJoin, grouping = Joindf$Grp)
 plot(JoinQs)
-
-
-
-
 
